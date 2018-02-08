@@ -1,0 +1,15 @@
+-Changed function beatLEDFunctionFour() to beatLEDFunctionFour(int)
+-Added example GermanDuckSongShortPitches
+-Added definitions for the notes in pitches.h
+
+-Added example GermanDuckSongShort
+-Added ability to shorten some functions
+-Added Errors in serial monitor
+
+-Added example GermanDuckSong
+-Added serial monitor for debugging
+-Changed some public integers to privat integers
+-Added comments for description
+
+-Fixed Bugs
+-Added everything
