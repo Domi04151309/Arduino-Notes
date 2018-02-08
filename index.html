@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<title>Arduino - Notes Library</title>
+	<meta charset="utf-8">  
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<link rel="icon" href="https://www.arduino.cc/favicon.ico">
+	<meta name="theme-color" content="#00979d">
+	<style>
+	*{
+		padding:0;
+		margin:0;
+	}
+	html,body{
+		height:100%;
+		width:100%;
+		font:14px verdana, sans-serif;
+	}
+	h1{
+		color: #fff;
+		display: inline-block;
+		font-weight: 500;
+		font-size:14px;
+		letter-spacing: 3px;
+		line-height: 18px;
+		padding: 18px 9px;
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+	.header{
+		background-color: #00979d;
+		font-size: 13px;
+		position: fixed;
+		top: 0;
+		width: 100%;
+		z-index: 3;
+		height: 54px;
+	}
+	.logo{
+		float:left;
+		background-position: 30px -100px,20px 11px;
+		height: 32px;
+		padding: 11px 30px;
+		width: 43px;
+		background-image: url(https://content.arduino.cc/brand/arduino-white.svg),url(https://content.arduino.cc/brand/arduino_compressed-white.svg);
+		background-repeat: no-repeat,no-repeat;
+		background-size: 134px 100px,58px 32px;
+		box-sizing: content-box;
+		display: block;
+		left: 0;
+		position: relative;
+		transition: .3s;
+	}
+	.base{
+		max-width: 780px;
+		padding: 20px 10px 0 10px;
+		margin: 54px auto 20px;
+	}
+	h2{
+		color:#e67e22;
+		font-size: 18px;
+		font-weight: 400;
+		letter-spacing: 1px;
+		line-height: 25px;
+		margin-bottom: 3px;
+		margin-top: 32px;
+	}
+	p{
+		color: #374146;
+		letter-spacing: .5px;
+		line-height: 22px;
+	}
+	pre{
+		border: 0;
+		border-radius: 0;
+		box-sizing: border-box;
+		overflow-x: auto;
+		width: 100%;
+		background-color: #f7f9f9;
+		display: block;
+		font-family: monospace;
+		margin: 1em 0px;
+		color: #434f54;
+	}
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<div class="header">
+		<a href="https://www.arduino.cc" class="logo" role="button" aria-label="Homepage"></a>
+		<h1>Arduino - Notes Library</h1>
+	</div>
+	<div class="base">
+		<img src="https://cdn.arduino.cc/homepage/images/arduino-UNO.png" alt="Arduino Board">
+		<h2>About the library</h2>
+		<p>This library is made for programmers who want a more advanced tone command. It was developed by Dominik Reichl in 2018. If you want to change something and reupload it please credit me.</p>
+		<h2>Commands</h2>
+			<pre>Notes n(param1, param2)</pre>
+		<p>
+			param1 = time beat-LED blinks<br>
+			param2 = space between notes<br>
+		</p>
+		<br><br>
+		<pre>n.speakerSetup(param1)</pre>
+		<pre>n.speakerSetup(param1, param2)</pre>
+		<p>
+			param1 = pin of the speaker<br>
+			param2 = beats per minute (default is 120)<br>
+		</p>
+		<br><br>
+		<pre>n.toneLEDSetup(param1, param2, param3, param4, param5, param6, param7, param8)</pre>
+		<p>
+			param1 = pin of the beat-LED<br>
+			param2 = pin of the c-LED<br>
+			param3 = pin of the d-LED<br>
+			param4 = pin of the e-LED<br>
+			param5 = pin of the f-LED<br>
+			param6 = pin of the g-LED<br>
+			param7 = pin of the a-LED<br>
+			param8 = pin of the b-LED<br>
+		</p>
+		<br><br>
+		<pre>n.blinkLED(param1)</pre>
+		<p>
+			param1 = pin of the LED you want to blink<br>
+		</p>
+		<br><br>
+		<pre>n.note(param1, param2)</pre>
+		<pre>n.note(param1, param2, param3, param4)</pre>
+		<p>
+			param1 = frequency of the tone you want to play<br>
+			param2 = 1, 2, 3, 4 or 8 for the length<br>
+			param3 = true for a dotted note, false for a normal note (default is false)<br>
+			param4 = true for asynchronous beat-LED, false for normal beat-LED (default is false)<br>
+			<i>For param1 you can also use keywords which you can find <a href="https://www.arduino.cc/en/Tutorial/ToneMelody?action=sourceblock&num=2">here</a></i>
+		</p>
+		<h2>Example</h2>
+		<pre>
+int g=396;
+int a=440;
+int b=495;
+int hc=528;
+int hd=594;
+int he=660;
+
+#include &ltNotes.h&gt			//Includes the library
+
+Notes n(64,16);				//Sets the beatLEDtime to 64 and the noToneDelay to 16
+
+void setup()
+{
+  n.speakerSetup(11,120);		//Sets the speakerPort to 11 and the beats per minute to 120
+  n.toneLEDSetup(2,3,4,5,6,7,8,9);	//Sets the beatLED to port 2 and the toneLEDs to the ports 3, 4, 5, 6, 7, 8 and 9
+}
+
+void loop()
+{
+  n.note(g,4,false,false);		//Plays the song
+  n.note(a,4,false,false);
+  n.note(b,4,false,false);
+  n.note(hc,4,false,false);
+  n.note(hd,2,false,false);
+  n.note(hd,2,false,false);
+  n.note(he,4,false,false);
+  n.note(he,4,false,false);
+  n.note(he,4,false,false);
+  n.note(he,4,false,false);
+  n.note(hd,1,false,false);
+  n.note(he,4,false,false);
+  n.note(he,4,false,false);
+  n.note(he,4,false,false);
+  n.note(he,4,false,false);
+  n.note(hd,1,false,false);
+  n.note(hc,4,false,false);
+  n.note(hc,4,false,false);
+  n.note(hc,4,false,false);
+  n.note(hc,4,false,false);
+  n.note(b,2,false,false);
+  n.note(b,2,false,false);
+  n.note(a,4,false,false);
+  n.note(a,4,false,false);
+  n.note(a,4,false,false);
+  n.note(a,4,false,false);
+  n.note(g,1,false,false);
+}
+		</pre>
+	</div>
+</body>
+</html>
