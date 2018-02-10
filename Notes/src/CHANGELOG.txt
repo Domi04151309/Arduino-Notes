@@ -1,3 +1,6 @@
+-Performance improvements
+-Added board detection
+
 -Changed function beatLEDFunctionFour() to beatLEDFunctionFour(int)
 -Added example GermanDuckSongShortPitches
 -Added definitions for the notes in pitches.h

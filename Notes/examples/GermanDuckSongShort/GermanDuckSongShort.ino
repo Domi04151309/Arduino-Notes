@@ -15,10 +15,10 @@ void setup()
 {
   //Starts the serial monitor for debugging
   Serial.begin(9600);
-  //Sets the speakerPort to 11 and the beats per minute to 120
-  n.speakerSetup(11);
-  //Sets the beatLED to port 2 and the toneLEDs to the ports 3, 4, 5, 6, 7, 8 and 9
-  n.toneLEDSetup(2,3,4,5,6,7,8,9);
+  //Sets the speakerPort to 3 and the beats per minute to 120
+  n.speakerSetup(3);
+  //Sets the beatLED to port 6 and the toneLEDs to the ports 7, 8, 9, 10, 11, 12 and 13
+  n.toneLEDSetup(6,8,8,9,10,11,12,13);
 }
 
 void loop()

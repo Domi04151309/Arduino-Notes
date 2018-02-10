@@ -31,6 +31,7 @@
 
 #include <Arduino.h>
 #include <Notes.h>
+#include <Board.h>
 
 //Setup process
 Notes::Notes(unsigned int x, unsigned int y){ 
@@ -39,15 +40,17 @@ Notes::Notes(unsigned int x, unsigned int y){
 }
 
 //Sets the speakerPort and the speed
-void Notes::speakerSetup(unsigned int speaker, unsigned int speaker2){
+void Notes::speakerSetup(uint8_t speaker, unsigned int speaker2){
   //For Debugging
   Serial.print("speakerSetup ");Serial.print(speaker);Serial.print(", ");Serial.println(speaker2);
   
+  #ifdef ARDUINO_BOARD_UNO
   if(speaker != 3 && speaker != 5 && speaker != 6 && speaker != 9 && speaker != 10 && speaker != 11){
 	Serial.println("###");
 	Serial.println("### ERROR: Port has to be 3, 5, 6, 9, 10 or 11");
 	Serial.println("###");
   }
+  #endif
   
   speakerPort=speaker;
   bpm=speaker2;
@@ -55,15 +58,17 @@ void Notes::speakerSetup(unsigned int speaker, unsigned int speaker2){
 }
 
 //Sets the ports of the LED pins
-void Notes::toneLEDSetup(unsigned int pin0, unsigned int pin1, unsigned int pin2, unsigned int pin3, unsigned int pin4, unsigned int pin5, unsigned int pin6, unsigned int pin7){
+void Notes::toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7){
   //For Debugging
   Serial.print("toneLEDSetup ");Serial.print(pin0);Serial.print(", ");Serial.print(pin1);Serial.print(", ");Serial.print(pin2);Serial.print(", ");Serial.print(pin3);Serial.print(", ");Serial.print(pin4);Serial.print(", ");Serial.print(pin5);Serial.print(", ");Serial.print(pin6);Serial.print(", ");Serial.println(pin7);
   
+  #ifdef ARDUINO_BOARD_UNO
   if(pin0 > 14 || pin1 > 14 || pin2 > 14 || pin3 > 14 || pin4 > 14 || pin5 > 14 || pin6 > 14 || pin7 > 14 || pin0 < 2 || pin1 < 2 || pin2 < 2 || pin3 < 2 || pin4 < 2 || pin5 < 2 || pin6 < 2 || pin7 < 2){
 	Serial.println("###");
 	Serial.println("### ERROR: Port numbers have to be between 2 and 13");
 	Serial.println("###");
   }
+  #endif
   
   beatLEDPort=pin0;
   cLED=pin1;
@@ -84,7 +89,7 @@ void Notes::toneLEDSetup(unsigned int pin0, unsigned int pin1, unsigned int pin2
 }
 
 //A LED blinks
-void Notes::blinkLED(unsigned int param1LED){
+void Notes::blinkLED(uint8_t param1LED){
   //For Debugging
   Serial.print("blinkLED ");Serial.println(param1LED);
     
@@ -101,8 +106,8 @@ void Notes::beatLEDFunction(){
 }
 
 //BeatLED blink + 1/4 note
-void Notes::beatLEDFunctionFour(unsigned int z){
-  for(unsigned int repeats=z; repeats>0; repeats=repeats-1){
+void Notes::beatLEDFunctionFour(uint8_t z){
+  for(uint8_t repeats=z; repeats>0; repeats=repeats-1){
     beatLEDFunction();
     delay(beatDuration-beatLEDTime);
   }
@@ -115,7 +120,7 @@ void Notes::noToneDelay(){
 }
 
 //Main function of this library
-void Notes::note(float param1, unsigned int param2, bool param3, bool param4){
+void Notes::note(float param1, uint8_t param2, bool param3, bool param4){
     
   //For Debugging
   Serial.print("note ");Serial.print(param1);Serial.print(", ");Serial.print(param2);Serial.print(", ");Serial.print(param3);Serial.print(", ");Serial.println(param4);

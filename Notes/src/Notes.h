@@ -37,27 +37,27 @@ class Notes
 {
  public:
    Notes(unsigned int x, unsigned int y);
-   void speakerSetup(unsigned int speaker, unsigned int speaker2 = 120);
-   void toneLEDSetup(unsigned int pin0, unsigned int pin1, unsigned int pin2, unsigned int pin3, unsigned int pin4, unsigned int pin5, unsigned int pin6, unsigned int pin7);
-   void blinkLED(unsigned int param1LED);
-   void note(float param1, unsigned int param2, bool param3 = false, bool param4 = false);
+   void speakerSetup(uint8_t speaker, unsigned int speaker2 = 120);
+   void toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7);
+   void blinkLED(uint8_t param1LED);
+   void note(float param1, uint8_t param2, bool param3 = false, bool param4 = false);
   private:
-   unsigned int speakerPort;
-   unsigned int beatLEDPort;
-   unsigned int cLED;
-   unsigned int dLED;
-   unsigned int eLED;
-   unsigned int fLED;
-   unsigned int gLED;
-   unsigned int aLED;
-   unsigned int hLED;
-   unsigned int toneLED;
+   uint8_t speakerPort;
+   uint8_t beatLEDPort;
+   uint8_t cLED;
+   uint8_t dLED;
+   uint8_t eLED;
+   uint8_t fLED;
+   uint8_t gLED;
+   uint8_t aLED;
+   uint8_t hLED;
+   uint8_t toneLED;
    unsigned int bpm;
    float beatDuration;
    unsigned int beatLEDTime;
    unsigned int toneDelay;
    void beatLEDFunction();
-   void beatLEDFunctionFour(unsigned int z = 1);
+   void beatLEDFunctionFour(uint8_t z = 1);
    void noToneDelay();
 };
 
