@@ -18,7 +18,7 @@ void setup()
   //Sets the speakerPort to 3 and the beats per minute to 120
   n.speakerSetup(3);
   //Sets the beatLED to port 6 and the toneLEDs to the ports 7, 8, 9, 10, 11, 12 and 13
-  n.toneLEDSetup(6,8,8,9,10,11,12,13);
+  n.toneLEDSetup(6,7,8,9,10,11,12,13);
 }
 
 void loop()
