@@ -47,7 +47,19 @@ void Notes::speakerSetup(uint8_t speaker, unsigned int speaker2){
   #ifdef ARDUINO_BOARD_UNO
   if(speaker != 3 && speaker != 5 && speaker != 6 && speaker != 9 && speaker != 10 && speaker != 11){
 	Serial.println("###");
-	Serial.println("### ERROR: Port has to be 3, 5, 6, 9, 10 or 11");
+	Serial.println("### ERROR: Pin has to be 3, 5, 6, 9, 10 or 11");
+	Serial.println("###");
+  }
+  #elif defined ARDUINO_BOARD_ZERO
+  if(speaker != 3 && speaker != 4 && speaker != 5 && speaker != 6 && speaker != 8 && speaker != 9 && speaker != 10 && speaker != 11 && speaker != 12 && speaker != 13){
+	Serial.println("###");
+	Serial.println("### ERROR: Pin has to be 3, 4, 5, 6, 8, 9, 10, 11, 12 or 13");
+	Serial.println("###");
+  }
+  #elif defined ARDUINO_BOARD_YUN_400MHZ
+  if(speaker != 3 && speaker != 5 && speaker != 6 && speaker != 10 && speaker != 11){
+	Serial.println("###");
+	Serial.println("### ERROR: Pin has to be 3, 5, 6, 10 or 11");
 	Serial.println("###");
   }
   #endif
@@ -62,10 +74,10 @@ void Notes::toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3,
   //For Debugging
   Serial.print("toneLEDSetup ");Serial.print(pin0);Serial.print(", ");Serial.print(pin1);Serial.print(", ");Serial.print(pin2);Serial.print(", ");Serial.print(pin3);Serial.print(", ");Serial.print(pin4);Serial.print(", ");Serial.print(pin5);Serial.print(", ");Serial.print(pin6);Serial.print(", ");Serial.println(pin7);
   
-  #ifdef ARDUINO_BOARD_UNO
+  #ifdef ARDUINO_BOARD_UNO || ARDUINO_BOARD_ZERO || ARDUINO_BOARD_YUN_400MHZ
   if(pin0 > 14 || pin1 > 14 || pin2 > 14 || pin3 > 14 || pin4 > 14 || pin5 > 14 || pin6 > 14 || pin7 > 14 || pin0 < 2 || pin1 < 2 || pin2 < 2 || pin3 < 2 || pin4 < 2 || pin5 < 2 || pin6 < 2 || pin7 < 2){
 	Serial.println("###");
-	Serial.println("### ERROR: Port numbers have to be between 2 and 13");
+	Serial.println("### ERROR: Pin numbers have to be between 2 and 13");
 	Serial.println("###");
   }
   #endif
