@@ -40,9 +40,9 @@ Notes::Notes(unsigned int x, unsigned int y){
 }
 
 //Sets the speakerPort and the speed
-void Notes::speakerSetup(uint8_t speaker, unsigned int speaker2){
+void Notes::speakerSetup(uint8_t speaker, unsigned int speed){
   //For Debugging
-  Serial.print("speakerSetup ");Serial.print(speaker);Serial.print(", ");Serial.println(speaker2);
+  Serial.print("speakerSetup ");Serial.print(speaker);Serial.print(", ");Serial.println(speed);
   
   #ifdef ARDUINO_BOARD_UNO
   if(speaker != 3 && speaker != 5 && speaker != 6 && speaker != 9 && speaker != 10 && speaker != 11){
@@ -65,7 +65,7 @@ void Notes::speakerSetup(uint8_t speaker, unsigned int speaker2){
   #endif
   
   speakerPort=speaker;
-  bpm=speaker2;
+  bpm=speed;
   beatDuration=60000/bpm;
 }
 

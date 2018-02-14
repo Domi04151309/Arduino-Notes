@@ -41,7 +41,7 @@ class Notes
    void toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7);
    void blinkLED(uint8_t param1LED);
    void note(float param1, uint8_t param2, bool param3 = false, bool param4 = false);
-  private:
+ private:
    uint8_t speakerPort;
    uint8_t beatLEDPort;
    uint8_t cLED;
