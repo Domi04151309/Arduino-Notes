@@ -33,15 +33,20 @@
 #ifndef Notes_h
 #define Notes_h
 
+#define ON true
+#define OFF false
+
 class Notes
 {
  public:
    Notes(unsigned int x, unsigned int y);
    void speakerSetup(uint8_t speaker, unsigned int speaker2 = 120);
    void toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7);
+	 void toneLEDState(bool state = true);
    void blinkLED(uint8_t param1LED);
    void note(float param1, uint8_t param2, bool param3 = false, bool param4 = false);
  private:
+	 bool toneLEDStateBool = false;
    uint8_t speakerPort;
    uint8_t beatLEDPort;
    uint8_t cLED;
@@ -50,7 +55,7 @@ class Notes
    uint8_t fLED;
    uint8_t gLED;
    uint8_t aLED;
-   uint8_t hLED;
+   uint8_t bLED;
    uint8_t toneLED;
    unsigned int bpm;
    float beatDuration;

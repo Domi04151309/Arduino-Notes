@@ -1,3 +1,6 @@
+-Added ability to turn off tone LEDs
+-Added switch case instead of if else
+
 -Added Errors with board detection
 -Performance improvements
 -Added board detection

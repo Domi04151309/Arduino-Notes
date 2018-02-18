@@ -46,21 +46,21 @@ void Notes::speakerSetup(uint8_t speaker, unsigned int speed){
   
   #ifdef ARDUINO_BOARD_UNO
   if(speaker != 3 && speaker != 5 && speaker != 6 && speaker != 9 && speaker != 10 && speaker != 11){
-	Serial.println("###");
-	Serial.println("### ERROR: Pin has to be 3, 5, 6, 9, 10 or 11");
-	Serial.println("###");
+		Serial.println("###");
+		Serial.println("### ERROR: Pin has to be 3, 5, 6, 9, 10 or 11");
+		Serial.println("###");
   }
   #elif defined ARDUINO_BOARD_ZERO
   if(speaker != 3 && speaker != 4 && speaker != 5 && speaker != 6 && speaker != 8 && speaker != 9 && speaker != 10 && speaker != 11 && speaker != 12 && speaker != 13){
-	Serial.println("###");
-	Serial.println("### ERROR: Pin has to be 3, 4, 5, 6, 8, 9, 10, 11, 12 or 13");
-	Serial.println("###");
+		Serial.println("###");
+		Serial.println("### ERROR: Pin has to be 3, 4, 5, 6, 8, 9, 10, 11, 12 or 13");
+		Serial.println("###");
   }
   #elif defined ARDUINO_BOARD_YUN_400MHZ
   if(speaker != 3 && speaker != 5 && speaker != 6 && speaker != 10 && speaker != 11){
-	Serial.println("###");
-	Serial.println("### ERROR: Pin has to be 3, 5, 6, 10 or 11");
-	Serial.println("###");
+		Serial.println("###");
+		Serial.println("### ERROR: Pin has to be 3, 5, 6, 10 or 11");
+		Serial.println("###");
   }
   #endif
   
@@ -76,9 +76,9 @@ void Notes::toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3,
   
   #ifdef ARDUINO_BOARD_UNO || ARDUINO_BOARD_ZERO || ARDUINO_BOARD_YUN_400MHZ
   if(pin0 > 14 || pin1 > 14 || pin2 > 14 || pin3 > 14 || pin4 > 14 || pin5 > 14 || pin6 > 14 || pin7 > 14 || pin0 < 2 || pin1 < 2 || pin2 < 2 || pin3 < 2 || pin4 < 2 || pin5 < 2 || pin6 < 2 || pin7 < 2){
-	Serial.println("###");
-	Serial.println("### ERROR: Pin numbers have to be between 2 and 13");
-	Serial.println("###");
+		Serial.println("###");
+		Serial.println("### ERROR: Pin numbers have to be between 2 and 13");
+		Serial.println("###");
   }
   #endif
   
@@ -89,7 +89,7 @@ void Notes::toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3,
   fLED=pin4;
   gLED=pin5;
   aLED=pin6;
-  hLED=pin7;
+  bLED=pin7;
   pinMode(beatLEDPort, OUTPUT);
   pinMode(cLED, OUTPUT);
   pinMode(dLED, OUTPUT);
@@ -97,7 +97,11 @@ void Notes::toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3,
   pinMode(fLED, OUTPUT);
   pinMode(gLED, OUTPUT);
   pinMode(aLED, OUTPUT);
-  pinMode(hLED, OUTPUT);
+  pinMode(bLED, OUTPUT);
+}
+
+void Notes::toneLEDState(bool state){
+	toneLEDStateBool = state;
 }
 
 //A LED blinks
@@ -137,134 +141,162 @@ void Notes::note(float param1, uint8_t param2, bool param3, bool param4){
   //For Debugging
   Serial.print("note ");Serial.print(param1);Serial.print(", ");Serial.print(param2);Serial.print(", ");Serial.print(param3);Serial.print(", ");Serial.println(param4);
   
-  if(param2 != 1 && param2 != 2 && param2 != 4 && param2 != 8){
-	Serial.println("###");
-	Serial.println("### ERROR: Parameter 2 has to be 1, 2, 4 or 8");
-	Serial.println("###");
-  }
-  
   //Plays the sound
   tone(speakerPort,param1);
   
-  //LEDs for the notes
-  if (param1 <= 132){toneLED=cLED;}			//low
-  else if (param1 <= 148.5){toneLED=dLED;}
-  else if (param1 <= 165){toneLED=eLED;}
-  else if (param1 <= 176){toneLED=fLED;}
-  else if (param1 <= 198){toneLED=gLED;}
-  else if (param1 <= 220){toneLED=aLED;}
-  else if (param1 <= 247.5){toneLED=hLED;}
-  
-  else if (param1 <= 264){toneLED=cLED;}	//normal
-  else if (param1 <= 297){toneLED=dLED;}
-  else if (param1 <= 330){toneLED=eLED;}
-  else if (param1 <= 352){toneLED=fLED;}
-  else if (param1 <= 396){toneLED=gLED;}
-  else if (param1 <= 440){toneLED=aLED;}
-  else if (param1 <= 495){toneLED=hLED;}
-  
-  else if (param1 <= 528){toneLED=cLED;}	//high
-  else if (param1 <= 594){toneLED=dLED;}
-  else if (param1 <= 660){toneLED=eLED;}
-  else if (param1 <= 704){toneLED=fLED;}
-  else if (param1 <= 792){toneLED=gLED;}
-  else if (param1 <= 880){toneLED=aLED;}
-  else if (param1 <= 990){toneLED=hLED;}
-  
-  else if (param1 <= 1056){toneLED=cLED;}	//very high
-  else if (param1 <= 1188){toneLED=dLED;}
-  else if (param1 <= 1320){toneLED=eLED;}
-  else if (param1 <= 1408){toneLED=fLED;}
-  else if (param1 <= 1584){toneLED=gLED;}
-  else if (param1 <= 1760){toneLED=aLED;}
-  else if (param1 <= 1980){toneLED=hLED;}
-  //Turns on the toneLED
-  digitalWrite(toneLED,HIGH);
+	if(toneLEDStateBool == true){
+		//LEDs for the notes
+		if (param1 <= NOTE_C3){toneLED=cLED;}				//low
+		else if (param1 <= NOTE_D3){toneLED=dLED;}
+		else if (param1 <= NOTE_E3){toneLED=eLED;}
+		else if (param1 <= NOTE_F3){toneLED=fLED;}
+		else if (param1 <= NOTE_G3){toneLED=gLED;}
+		else if (param1 <= NOTE_A3){toneLED=aLED;}
+		else if (param1 <= NOTE_B3){toneLED=bLED;}
+		
+		else if (param1 <= NOTE_C4){toneLED=cLED;}	//normal
+		else if (param1 <= NOTE_D4){toneLED=dLED;}
+		else if (param1 <= NOTE_E4){toneLED=eLED;}
+		else if (param1 <= NOTE_F4){toneLED=fLED;}
+		else if (param1 <= NOTE_G4){toneLED=gLED;}
+		else if (param1 <= NOTE_A4){toneLED=aLED;}
+		else if (param1 <= NOTE_B4){toneLED=bLED;}
+		
+		else if (param1 <= NOTE_C5){toneLED=cLED;}	//high
+		else if (param1 <= NOTE_D5){toneLED=dLED;}
+		else if (param1 <= NOTE_E5){toneLED=eLED;}
+		else if (param1 <= NOTE_F5){toneLED=fLED;}
+		else if (param1 <= NOTE_G5){toneLED=gLED;}
+		else if (param1 <= NOTE_A5){toneLED=aLED;}
+		else if (param1 <= NOTE_B5){toneLED=bLED;}
+		
+		else if (param1 <= NOTE_C6){toneLED=cLED;}	//very high
+		else if (param1 <= NOTE_D6){toneLED=dLED;}
+		else if (param1 <= NOTE_E6){toneLED=eLED;}
+		else if (param1 <= NOTE_F6){toneLED=fLED;}
+		else if (param1 <= NOTE_G6){toneLED=gLED;}
+		else if (param1 <= NOTE_A6){toneLED=aLED;}
+		else if (param1 <= NOTE_B6){toneLED=bLED;}
+		
+		//Turns on the toneLED
+		digitalWrite(toneLED,HIGH);
+	}
   
   if(param4 == false){
-    if(param2 == 1){
-      //1/1 note
-      beatLEDFunctionFour(3);
-      beatLEDFunction();
-      delay(beatDuration-beatLEDTime-toneDelay);
-      noToneDelay();
-    }else if(param2 == 2){
-      if(param3 == true){
-        //1/2 note with point
-        beatLEDFunctionFour(2);
-        beatLEDFunction();
-        delay(beatDuration-beatLEDTime-toneDelay);
-        noToneDelay();
-      }else if(param3 == false){
-        //1/2 note
-        beatLEDFunctionFour();
-        beatLEDFunction();
-        delay(beatDuration-beatLEDTime-toneDelay);
-        noToneDelay();
-      }
-    }else if(param2 == 4){ 
-      if(param3 == true){
-        //1/4 note with point
-        beatLEDFunctionFour();
-        beatLEDFunction();
-        delay(beatDuration/2-beatLEDTime-toneDelay);
-        noToneDelay();
-      }else if(param3 == false){
-        //1/4 note
-        beatLEDFunction();
-        delay(beatDuration-beatLEDTime-toneDelay);
-        noToneDelay();
-      }
-    }else if(param2 == 8){
-      //1/8 note
-      beatLEDFunction();
-      delay(beatDuration/2-beatLEDTime-toneDelay);
-      noToneDelay();
+		switch(param2){
+			case 1:
+				//1/1 note
+				beatLEDFunctionFour(3);
+				beatLEDFunction();
+				delay(beatDuration-beatLEDTime-toneDelay);
+				noToneDelay();
+				break;
+				
+			case 2:
+				if(param3 == true){
+					//1/2 note with point
+					beatLEDFunctionFour(2);
+					beatLEDFunction();
+					delay(beatDuration-beatLEDTime-toneDelay);
+					noToneDelay();
+				}else if(param3 == false){
+					//1/2 note
+					beatLEDFunctionFour();
+					beatLEDFunction();
+					delay(beatDuration-beatLEDTime-toneDelay);
+					noToneDelay();
+				}
+				break;
+				
+			case 4:
+				if(param3 == true){
+					//1/4 note with point
+					beatLEDFunctionFour();
+					beatLEDFunction();
+					delay(beatDuration/2-beatLEDTime-toneDelay);
+					noToneDelay();
+				}else if(param3 == false){
+					//1/4 note
+					beatLEDFunction();
+					delay(beatDuration-beatLEDTime-toneDelay);
+					noToneDelay();
+				}
+				break;
+				
+			case 8:
+				//1/8 note
+				beatLEDFunction();
+				delay(beatDuration/2-beatLEDTime-toneDelay);
+				noToneDelay();
+				break;
+				
+			default:
+				Serial.println("###");
+				Serial.println("### ERROR: Parameter 2 has to be 1, 2, 4 or 8");
+				Serial.println("###");
+				break;
     }
+	
   }else if(param4 == true){
-    if(param2 == 1){
-      //1/1 note with asynchronous beatLED
-      delay(beatDuration/2);
-      beatLEDFunctionFour(3);
-      beatLEDFunction();
-      delay(beatDuration/2-beatLEDTime-toneDelay);
-      noToneDelay();
-    }else if(param2 == 2){
-      if(param3 == true){
-      //1/2 note with asynchronous beatLED and point
-        delay(beatDuration/2);
-        beatLEDFunctionFour(2);
-        beatLEDFunction();
-        delay(beatDuration/2-beatLEDTime-toneDelay);
-        noToneDelay();
-      }else if(param3 == false){
-      //1/2 note with asynchronous beatLED
-        delay(beatDuration/2);
-        beatLEDFunctionFour();
-        beatLEDFunction();
-        delay(beatDuration/2-beatLEDTime-toneDelay);
-        noToneDelay();
-      }
-    }else if(param2 == 4){ 
-      if(param3 == true){
-      //1/4 note with asynchronous beatLED and point
-        delay(beatDuration/2);
-        beatLEDFunction();
-        delay(beatDuration-beatLEDTime-toneDelay);
-        noToneDelay();
-      }else if(param3 == false){
-      //1/4 note with asynchronous beatLED
-        delay(beatDuration/2);
-        beatLEDFunction();
-        delay(beatDuration/2-beatLEDTime-toneDelay);
-        noToneDelay();
-      }
-    }else if(param2 == 8){
-      //1/8 note with asynchronous beatLED
-      delay(beatDuration/2-toneDelay);
-      noToneDelay();
+		switch(param2){
+			case 1:
+				//1/1 note with asynchronous beatLED
+				delay(beatDuration/2);
+				beatLEDFunctionFour(3);
+				beatLEDFunction();
+				delay(beatDuration/2-beatLEDTime-toneDelay);
+				noToneDelay();
+				break;
+				
+			case 2:
+				if(param3 == true){
+				//1/2 note with asynchronous beatLED and point
+					delay(beatDuration/2);
+					beatLEDFunctionFour(2);
+					beatLEDFunction();
+					delay(beatDuration/2-beatLEDTime-toneDelay);
+					noToneDelay();
+				}else if(param3 == false){
+				//1/2 note with asynchronous beatLED
+					delay(beatDuration/2);
+					beatLEDFunctionFour();
+					beatLEDFunction();
+					delay(beatDuration/2-beatLEDTime-toneDelay);
+					noToneDelay();
+				}
+				break;
+				
+			case 4:
+				if(param3 == true){
+				//1/4 note with asynchronous beatLED and point
+					delay(beatDuration/2);
+					beatLEDFunction();
+					delay(beatDuration-beatLEDTime-toneDelay);
+					noToneDelay();
+				}else if(param3 == false){
+				//1/4 note with asynchronous beatLED
+					delay(beatDuration/2);
+					beatLEDFunction();
+					delay(beatDuration/2-beatLEDTime-toneDelay);
+					noToneDelay();
+				}
+				break;
+				
+			case 8:
+				//1/8 note with asynchronous beatLED
+				delay(beatDuration/2-toneDelay);
+				noToneDelay();
+				break;
+				
+			default:
+				Serial.println("###");
+				Serial.println("### ERROR: Parameter 2 has to be 1, 2, 4 or 8");
+				Serial.println("###");
+				break;
     }
-  }
-  //Turns off the toneLED
-  digitalWrite(toneLED,LOW);
+  }	
+	if(toneLEDStateBool == true){
+		//Turns off the toneLED
+		digitalWrite(toneLED,LOW);
+	}
 }

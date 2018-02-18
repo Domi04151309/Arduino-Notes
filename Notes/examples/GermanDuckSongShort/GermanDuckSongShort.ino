@@ -19,6 +19,8 @@ void setup()
   n.speakerSetup(3);
   //Sets the beatLED to port 6 and the toneLEDs to the ports 7, 8, 9, 10, 11, 12 and 13
   n.toneLEDSetup(6,7,8,9,10,11,12,13);
+	//Turns on the tone LEDs
+	n.toneLEDState();
 }
 
 void loop()
