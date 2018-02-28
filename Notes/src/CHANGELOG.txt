@@ -1,3 +1,6 @@
+-Removed compiler error
+-Added better tone detection
+
 -Added ability to turn off tone LEDs
 -Added switch case instead of if else
 

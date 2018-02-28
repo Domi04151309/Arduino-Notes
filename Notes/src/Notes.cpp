@@ -74,7 +74,7 @@ void Notes::toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3,
   //For Debugging
   Serial.print("toneLEDSetup ");Serial.print(pin0);Serial.print(", ");Serial.print(pin1);Serial.print(", ");Serial.print(pin2);Serial.print(", ");Serial.print(pin3);Serial.print(", ");Serial.print(pin4);Serial.print(", ");Serial.print(pin5);Serial.print(", ");Serial.print(pin6);Serial.print(", ");Serial.println(pin7);
   
-  #ifdef ARDUINO_BOARD_UNO || ARDUINO_BOARD_ZERO || ARDUINO_BOARD_YUN_400MHZ
+  #if defined(ARDUINO_BOARD_UNO) || defined(ARDUINO_BOARD_ZERO) || defined(ARDUINO_BOARD_YUN_400MHZ)
   if(pin0 > 14 || pin1 > 14 || pin2 > 14 || pin3 > 14 || pin4 > 14 || pin5 > 14 || pin6 > 14 || pin7 > 14 || pin0 < 2 || pin1 < 2 || pin2 < 2 || pin3 < 2 || pin4 < 2 || pin5 < 2 || pin6 < 2 || pin7 < 2){
 		Serial.println("###");
 		Serial.println("### ERROR: Pin numbers have to be between 2 and 13");
@@ -108,7 +108,6 @@ void Notes::toneLEDState(bool state){
 void Notes::blinkLED(uint8_t param1LED){
   //For Debugging
   Serial.print("blinkLED ");Serial.println(param1LED);
-    
   digitalWrite(param1LED,HIGH);
   delay(beatDuration/4);
   digitalWrite(param1LED,LOW);
@@ -146,37 +145,25 @@ void Notes::note(float param1, uint8_t param2, bool param3, bool param4){
   
 	if(toneLEDStateBool == true){
 		//LEDs for the notes
-		if (param1 <= NOTE_C3){toneLED=cLED;}				//low
-		else if (param1 <= NOTE_D3){toneLED=dLED;}
-		else if (param1 <= NOTE_E3){toneLED=eLED;}
-		else if (param1 <= NOTE_F3){toneLED=fLED;}
-		else if (param1 <= NOTE_G3){toneLED=gLED;}
-		else if (param1 <= NOTE_A3){toneLED=aLED;}
-		else if (param1 <= NOTE_B3){toneLED=bLED;}
-		
-		else if (param1 <= NOTE_C4){toneLED=cLED;}	//normal
-		else if (param1 <= NOTE_D4){toneLED=dLED;}
-		else if (param1 <= NOTE_E4){toneLED=eLED;}
-		else if (param1 <= NOTE_F4){toneLED=fLED;}
-		else if (param1 <= NOTE_G4){toneLED=gLED;}
-		else if (param1 <= NOTE_A4){toneLED=aLED;}
-		else if (param1 <= NOTE_B4){toneLED=bLED;}
-		
-		else if (param1 <= NOTE_C5){toneLED=cLED;}	//high
-		else if (param1 <= NOTE_D5){toneLED=dLED;}
-		else if (param1 <= NOTE_E5){toneLED=eLED;}
-		else if (param1 <= NOTE_F5){toneLED=fLED;}
-		else if (param1 <= NOTE_G5){toneLED=gLED;}
-		else if (param1 <= NOTE_A5){toneLED=aLED;}
-		else if (param1 <= NOTE_B5){toneLED=bLED;}
-		
-		else if (param1 <= NOTE_C6){toneLED=cLED;}	//very high
-		else if (param1 <= NOTE_D6){toneLED=dLED;}
-		else if (param1 <= NOTE_E6){toneLED=eLED;}
-		else if (param1 <= NOTE_F6){toneLED=fLED;}
-		else if (param1 <= NOTE_G6){toneLED=gLED;}
-		else if (param1 <= NOTE_A6){toneLED=aLED;}
-		else if (param1 <= NOTE_B6){toneLED=bLED;}
+		int x;
+		for(x=param1;x>NOTE_B1;x=x/2){
+			Serial.println(x);
+		}
+		if(x<=NOTE_C1){
+		  toneLED=cLED;
+		}else if(x<=NOTE_D1){
+		  toneLED=dLED;
+		}else if(x<=NOTE_E1){
+		  toneLED=eLED;
+		}else if(x<=NOTE_F1){
+		  toneLED=fLED;
+		}else if(x<=NOTE_G1){
+		  toneLED=gLED;
+		}else if(x<=NOTE_A1){
+		  toneLED=aLED;
+		}else if(x<=NOTE_B1){
+		  toneLED=bLED;
+		}
 		
 		//Turns on the toneLED
 		digitalWrite(toneLED,HIGH);
