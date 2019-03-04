@@ -33,37 +33,32 @@
 #ifndef Notes_h
 #define Notes_h
 
-#define ON true
-#define OFF false
-
-class Notes
-{
+class Notes {
  public:
-   Notes(unsigned int x, unsigned int y);
-   void speakerSetup(uint8_t speaker, unsigned int speaker2 = 120);
-   void toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7);
-	 void toneLEDState(bool state = true);
-   void blinkLED(uint8_t param1LED);
-   void note(float param1, uint8_t param2, bool param3 = false, bool param4 = false);
+    Notes();
+    void advancedSettings(unsigned int beatBlinkDuration, unsigned int toneGap);
+    void speakerSetup(uint8_t pin, unsigned int speed = 120);
+    void toneLEDSetup(uint8_t beat, uint8_t c, uint8_t d, uint8_t e, uint8_t f, uint8_t g, uint8_t a, uint8_t b);
+    void note(float frequency, uint8_t duration, bool dotted = false, bool offbeat = false);
  private:
-	 bool toneLEDStateBool = false;
-   uint8_t speakerPort;
-   uint8_t beatLEDPort;
-   uint8_t cLED;
-   uint8_t dLED;
-   uint8_t eLED;
-   uint8_t fLED;
-   uint8_t gLED;
-   uint8_t aLED;
-   uint8_t bLED;
-   uint8_t toneLED;
-   unsigned int bpm;
-   float beatDuration;
-   unsigned int beatLEDTime;
-   unsigned int toneDelay;
-   void beatLEDFunction();
-   void beatLEDFunctionFour(uint8_t z = 1);
-   void noToneDelay();
+    unsigned int _beatBlinkDuration = 64;
+    unsigned int _toneGap = 16;
+    uint8_t speakerPin;
+    uint8_t beatLEDPin = 0;
+    uint8_t cLED = 0;
+    uint8_t dLED = 0;
+    uint8_t eLED = 0;
+    uint8_t fLED = 0;
+    uint8_t gLED = 0;
+    uint8_t aLED = 0;
+    uint8_t bLED = 0;
+    uint8_t toneLED;
+    unsigned int bpm;
+    float beatDuration;
+    void warning(String msg);
+    void beatLEDFunction();
+    void repeatBeatLEDFunction(uint8_t repeats = 1);
+    void noToneDelay();
 };
 
 #endif

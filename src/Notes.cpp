@@ -33,64 +33,64 @@
 #include <Notes.h>
 #include <Board.h>
 
-//Setup process
-Notes::Notes(unsigned int x, unsigned int y){ 
-  beatLEDTime=x;
-  toneDelay=y;
+//Class constructor
+Notes::Notes(){}
+
+//Advanced settings
+void Notes::advancedSettings(unsigned int beatBlinkDuration, unsigned int toneGap){ 
+  _beatBlinkDuration = beatBlinkDuration;
+  _toneGap = toneGap;
 }
 
-//Sets the speakerPort and the speed
-void Notes::speakerSetup(uint8_t speaker, unsigned int speed){
+//Warning message on serial monitor
+void Notes::warning(String msg){
+  Serial.println("###\n### WARNING: " + msg + "\n###");
+}
+
+//speakerPin and speed
+void Notes::speakerSetup(uint8_t pin, unsigned int speed){
   //For Debugging
-  Serial.print("speakerSetup ");Serial.print(speaker);Serial.print(", ");Serial.println(speed);
+  Serial.println("speakerSetup " + String(pin) + ", " + String(speed));
   
   #ifdef ARDUINO_BOARD_UNO
-  if(speaker != 3 && speaker != 5 && speaker != 6 && speaker != 9 && speaker != 10 && speaker != 11){
-		Serial.println("###");
-		Serial.println("### ERROR: Pin has to be 3, 5, 6, 9, 10 or 11");
-		Serial.println("###");
+  if(pin != 3 && pin != 5 && pin != 6 && pin != 9 && pin != 10 && pin != 11){
+    warning("Pin has to be 3, 5, 6, 9, 10 or 11");
   }
   #elif defined ARDUINO_BOARD_ZERO
-  if(speaker != 3 && speaker != 4 && speaker != 5 && speaker != 6 && speaker != 8 && speaker != 9 && speaker != 10 && speaker != 11 && speaker != 12 && speaker != 13){
-		Serial.println("###");
-		Serial.println("### ERROR: Pin has to be 3, 4, 5, 6, 8, 9, 10, 11, 12 or 13");
-		Serial.println("###");
+  if(pin != 3 && pin != 4 && pin != 5 && pin != 6 && pin != 8 && pin != 9 && pin != 10 && pin != 11 && pin != 12 && pin != 13){
+    warning("Pin has to be 3, 4, 5, 6, 8, 9, 10, 11, 12 or 13");
   }
   #elif defined ARDUINO_BOARD_YUN_400MHZ
-  if(speaker != 3 && speaker != 5 && speaker != 6 && speaker != 10 && speaker != 11){
-		Serial.println("###");
-		Serial.println("### ERROR: Pin has to be 3, 5, 6, 10 or 11");
-		Serial.println("###");
+  if(pin != 3 && pin != 5 && pin != 6 && pin != 10 && pin != 11){
+    warning("Pin has to be 3, 5, 6, 10 or 11");
   }
   #endif
   
-  speakerPort=speaker;
-  bpm=speed;
-  beatDuration=60000/bpm;
+  speakerPin = pin;
+  bpm = speed;
+  beatDuration = 60000 / bpm;
 }
 
-//Sets the ports of the LED pins
-void Notes::toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7){
+//LED pins
+void Notes::toneLEDSetup(uint8_t beat, uint8_t c, uint8_t d, uint8_t e, uint8_t f, uint8_t g, uint8_t a, uint8_t b){
   //For Debugging
-  Serial.print("toneLEDSetup ");Serial.print(pin0);Serial.print(", ");Serial.print(pin1);Serial.print(", ");Serial.print(pin2);Serial.print(", ");Serial.print(pin3);Serial.print(", ");Serial.print(pin4);Serial.print(", ");Serial.print(pin5);Serial.print(", ");Serial.print(pin6);Serial.print(", ");Serial.println(pin7);
+  Serial.println("toneLEDSetup " + String(beat) + ", " + String(c) + ", " + String(d) + ", " + String(e) + ", " + String(f) + ", " + String(g) + ", " + String(a) + ", " + String(b));
   
   #if defined(ARDUINO_BOARD_UNO) || defined(ARDUINO_BOARD_ZERO) || defined(ARDUINO_BOARD_YUN_400MHZ)
-  if(pin0 > 14 || pin1 > 14 || pin2 > 14 || pin3 > 14 || pin4 > 14 || pin5 > 14 || pin6 > 14 || pin7 > 14 || pin0 < 2 || pin1 < 2 || pin2 < 2 || pin3 < 2 || pin4 < 2 || pin5 < 2 || pin6 < 2 || pin7 < 2){
-		Serial.println("###");
-		Serial.println("### ERROR: Pin numbers have to be between 2 and 13");
-		Serial.println("###");
+  if(beat > 14 || c > 14 || d > 14 || e > 14 || f > 14 || g > 14 || a > 14 || b > 14 || beat < 2 || c < 2 || d < 2 || e < 2 || f < 2 || g < 2 || a < 2 || b < 2){
+    warning("Pin numbers have to be between 2 and 13");
   }
   #endif
   
-  beatLEDPort=pin0;
-  cLED=pin1;
-  dLED=pin2;
-  eLED=pin3;
-  fLED=pin4;
-  gLED=pin5;
-  aLED=pin6;
-  bLED=pin7;
-  pinMode(beatLEDPort, OUTPUT);
+  beatLEDPin = beat;
+  cLED = c;
+  dLED = d;
+  eLED = e;
+  fLED = f;
+  gLED = g;
+  aLED = a;
+  bLED = b;
+  pinMode(beatLEDPin, OUTPUT);
   pinMode(cLED, OUTPUT);
   pinMode(dLED, OUTPUT);
   pinMode(eLED, OUTPUT);
@@ -100,190 +100,169 @@ void Notes::toneLEDSetup(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3,
   pinMode(bLED, OUTPUT);
 }
 
-void Notes::toneLEDState(bool state){
-	toneLEDStateBool = state;
-}
-
-//A LED blinks
-void Notes::blinkLED(uint8_t param1LED){
-  //For Debugging
-  Serial.print("blinkLED ");Serial.println(param1LED);
-  digitalWrite(param1LED,HIGH);
-  delay(beatDuration/4);
-  digitalWrite(param1LED,LOW);
-}
-
-//BeatLED blinks
+//beatLED blinks
 void Notes::beatLEDFunction(){
-  digitalWrite(beatLEDPort,HIGH);
-  delay(beatLEDTime);
-  digitalWrite(beatLEDPort,LOW);
+  digitalWrite(beatLEDPin, HIGH);
+  delay(_beatBlinkDuration);
+  digitalWrite(beatLEDPin, LOW);
 }
 
-//BeatLED blink + 1/4 note
-void Notes::beatLEDFunctionFour(uint8_t z){
-  for(uint8_t repeats=z; repeats>0; repeats=repeats-1){
+//beatLED blink + 1/4 note
+void Notes::repeatBeatLEDFunction(uint8_t repeats){
+  for(uint8_t i = repeats; i > 0; i--){
     beatLEDFunction();
-    delay(beatDuration-beatLEDTime);
+    delay(beatDuration - _beatBlinkDuration);
   }
 }
 
 //noTone with delay after every note in case of two equal notes after each other
 void Notes::noToneDelay(){
-  noTone(speakerPort);
-  delay(toneDelay);
+  noTone(speakerPin);
+  delay(_toneGap);
 }
 
 //Main function of this library
-void Notes::note(float param1, uint8_t param2, bool param3, bool param4){
+void Notes::note(float frequency, uint8_t duration, bool dotted, bool offbeat){
     
   //For Debugging
-  Serial.print("note ");Serial.print(param1);Serial.print(", ");Serial.print(param2);Serial.print(", ");Serial.print(param3);Serial.print(", ");Serial.println(param4);
+  Serial.println("note " + String(frequency) + "," + String(duration) + "," + String(dotted) + "," + String(offbeat));
   
-  //Plays the sound
-  tone(speakerPort,param1);
+  //Plays the tone
+  tone(speakerPin, frequency);
   
-	if(toneLEDStateBool == true){
-		//LEDs for the notes
-		int x;
-		for(x=param1;x>NOTE_B1;x=x/2){
-			Serial.println(x);
-		}
-		if(x<=NOTE_C1){
-		  toneLED=cLED;
-		}else if(x<=NOTE_D1){
-		  toneLED=dLED;
-		}else if(x<=NOTE_E1){
-		  toneLED=eLED;
-		}else if(x<=NOTE_F1){
-		  toneLED=fLED;
-		}else if(x<=NOTE_G1){
-		  toneLED=gLED;
-		}else if(x<=NOTE_A1){
-		  toneLED=aLED;
-		}else if(x<=NOTE_B1){
-		  toneLED=bLED;
-		}
-		
-		//Turns on the toneLED
-		digitalWrite(toneLED,HIGH);
-	}
+  //LEDs for the notes
+  int x;
+  for(x = frequency; x > NOTE_B1; x = x / 2){}
+  if(x <= NOTE_C1){
+    toneLED = cLED;
+  }else if(x <= NOTE_D1){
+    toneLED = dLED;
+  }else if(x <= NOTE_E1){
+    toneLED = eLED;
+  }else if(x <= NOTE_F1){
+    toneLED = fLED;
+  }else if(x <= NOTE_G1){
+    toneLED = gLED;
+  }else if(x <= NOTE_A1){
+    toneLED = aLED;
+  }else if(x <= NOTE_B1){
+    toneLED = bLED;
+  }
   
-  if(param4 == false){
-		switch(param2){
-			case 1:
-				//1/1 note
-				beatLEDFunctionFour(3);
-				beatLEDFunction();
-				delay(beatDuration-beatLEDTime-toneDelay);
-				noToneDelay();
-				break;
-				
-			case 2:
-				if(param3 == true){
-					//1/2 note with point
-					beatLEDFunctionFour(2);
-					beatLEDFunction();
-					delay(beatDuration-beatLEDTime-toneDelay);
-					noToneDelay();
-				}else if(param3 == false){
-					//1/2 note
-					beatLEDFunctionFour();
-					beatLEDFunction();
-					delay(beatDuration-beatLEDTime-toneDelay);
-					noToneDelay();
-				}
-				break;
-				
-			case 4:
-				if(param3 == true){
-					//1/4 note with point
-					beatLEDFunctionFour();
-					beatLEDFunction();
-					delay(beatDuration/2-beatLEDTime-toneDelay);
-					noToneDelay();
-				}else if(param3 == false){
-					//1/4 note
-					beatLEDFunction();
-					delay(beatDuration-beatLEDTime-toneDelay);
-					noToneDelay();
-				}
-				break;
-				
-			case 8:
-				//1/8 note
-				beatLEDFunction();
-				delay(beatDuration/2-beatLEDTime-toneDelay);
-				noToneDelay();
-				break;
-				
-			default:
-				Serial.println("###");
-				Serial.println("### ERROR: Parameter 2 has to be 1, 2, 4 or 8");
-				Serial.println("###");
-				break;
+  //Turns on the toneLED
+  digitalWrite(toneLED, HIGH);
+  
+  if(offbeat == false){
+    switch(duration){
+      case 1:
+        //1/1 note
+        repeatBeatLEDFunction(3);
+        beatLEDFunction();
+        delay(beatDuration - _beatBlinkDuration - _toneGap);
+        noToneDelay();
+        break;
+        
+      case 2:
+        if(dotted == true){
+          //1/2 note with point
+          repeatBeatLEDFunction(2);
+          beatLEDFunction();
+          delay(beatDuration - _beatBlinkDuration - _toneGap);
+          noToneDelay();
+        }else if(dotted == false){
+          //1/2 note
+          repeatBeatLEDFunction();
+          beatLEDFunction();
+          delay(beatDuration - _beatBlinkDuration - _toneGap);
+          noToneDelay();
+        }
+        break;
+        
+      case 4:
+        if(dotted == true){
+          //1/4 note with point
+          repeatBeatLEDFunction();
+          beatLEDFunction();
+          delay(beatDuration / 2 - _beatBlinkDuration - _toneGap);
+          noToneDelay();
+        }else if(dotted == false){
+          //1/4 note
+          beatLEDFunction();
+          delay(beatDuration - _beatBlinkDuration - _toneGap);
+          noToneDelay();
+        }
+        break;
+        
+      case 8:
+        //1/8 note
+        beatLEDFunction();
+        delay(beatDuration / 2 - _beatBlinkDuration - _toneGap);
+        noToneDelay();
+        break;
+        
+      default:
+        Serial.println("###");
+        Serial.println("### ERROR: Parameter 2 has to be 1, 2, 4 or 8");
+        Serial.println("###");
+        break;
     }
-	
-  }else if(param4 == true){
-		switch(param2){
-			case 1:
-				//1/1 note with asynchronous beatLED
-				delay(beatDuration/2);
-				beatLEDFunctionFour(3);
-				beatLEDFunction();
-				delay(beatDuration/2-beatLEDTime-toneDelay);
-				noToneDelay();
-				break;
-				
-			case 2:
-				if(param3 == true){
-				//1/2 note with asynchronous beatLED and point
-					delay(beatDuration/2);
-					beatLEDFunctionFour(2);
-					beatLEDFunction();
-					delay(beatDuration/2-beatLEDTime-toneDelay);
-					noToneDelay();
-				}else if(param3 == false){
-				//1/2 note with asynchronous beatLED
-					delay(beatDuration/2);
-					beatLEDFunctionFour();
-					beatLEDFunction();
-					delay(beatDuration/2-beatLEDTime-toneDelay);
-					noToneDelay();
-				}
-				break;
-				
-			case 4:
-				if(param3 == true){
-				//1/4 note with asynchronous beatLED and point
-					delay(beatDuration/2);
-					beatLEDFunction();
-					delay(beatDuration-beatLEDTime-toneDelay);
-					noToneDelay();
-				}else if(param3 == false){
-				//1/4 note with asynchronous beatLED
-					delay(beatDuration/2);
-					beatLEDFunction();
-					delay(beatDuration/2-beatLEDTime-toneDelay);
-					noToneDelay();
-				}
-				break;
-				
-			case 8:
-				//1/8 note with asynchronous beatLED
-				delay(beatDuration/2-toneDelay);
-				noToneDelay();
-				break;
-				
-			default:
-				Serial.println("###");
-				Serial.println("### ERROR: Parameter 2 has to be 1, 2, 4 or 8");
-				Serial.println("###");
-				break;
+  
+  }else if(offbeat == true){
+    switch(duration){
+      case 1:
+        //1/1 note with asynchronous beatLED
+        delay(beatDuration / 2);
+        repeatBeatLEDFunction(3);
+        beatLEDFunction();
+        delay(beatDuration / 2 - _beatBlinkDuration - _toneGap);
+        noToneDelay();
+        break;
+        
+      case 2:
+        if(dotted == true){
+        //1/2 note with asynchronous beatLED and point
+          delay(beatDuration / 2);
+          repeatBeatLEDFunction(2);
+          beatLEDFunction();
+          delay(beatDuration / 2 - _beatBlinkDuration - _toneGap);
+          noToneDelay();
+        }else if(dotted == false){
+        //1/2 note with asynchronous beatLED
+          delay(beatDuration / 2);
+          repeatBeatLEDFunction();
+          beatLEDFunction();
+          delay(beatDuration / 2 - _beatBlinkDuration - _toneGap);
+          noToneDelay();
+        }
+        break;
+        
+      case 4:
+        if(dotted == true){
+        //1/4 note with asynchronous beatLED and point
+          delay(beatDuration / 2);
+          beatLEDFunction();
+          delay(beatDuration - _beatBlinkDuration - _toneGap);
+          noToneDelay();
+        }else if(dotted == false){
+        //1/4 note with asynchronous beatLED
+          delay(beatDuration / 2);
+          beatLEDFunction();
+          delay(beatDuration / 2 - _beatBlinkDuration - _toneGap);
+          noToneDelay();
+        }
+        break;
+        
+      case 8:
+        //1/8 note with asynchronous beatLED
+        delay(beatDuration / 2 - _toneGap);
+        noToneDelay();
+        break;
+        
+      default:
+        warning("Duration has to be 1, 2, 4 or 8");
+        break;
     }
-  }	
-	if(toneLEDStateBool == true){
-		//Turns off the toneLED
-		digitalWrite(toneLED,LOW);
-	}
+  }  
+  //Turns off the toneLED
+  digitalWrite(toneLED, LOW);
 }
