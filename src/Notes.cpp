@@ -201,9 +201,7 @@ void Notes::note(float frequency, uint8_t duration, bool dotted, bool offbeat){
         break;
         
       default:
-        Serial.println("###");
-        Serial.println("### ERROR: Parameter 2 has to be 1, 2, 4 or 8");
-        Serial.println("###");
+        warning("Duration has to be 1, 2, 4 or 8");
         break;
     }
   
